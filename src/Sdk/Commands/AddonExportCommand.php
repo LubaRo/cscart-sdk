@@ -46,6 +46,11 @@ class AddonExportCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Whether to take the add-on templates from "design/themes" path at CS-Cart installation directory and put them at "var/themes_repository" path in the add-on files directory. When this option is not specified, the templates are being taken from "var/themes_repository" and also put into "var/themes_repository" directory.'
+            )
+            ->addOption('overwrite-files',
+                null,
+                InputOption::VALUE_NONE,
+                'If specifieced - files in target(addon) directory will be overwritten by version from cart-directory.'
             );
     }
 
@@ -117,7 +122,7 @@ class AddonExportCommand extends Command
                 $abs_addon_filepath = $abs_addon_path . $rel_filepath;
             }
 
-            if (file_exists($abs_addon_filepath)) {
+            if (file_exists($abs_addon_filepath) && !$input->getOption('overwrite-files')) {
                 $helper = $this->getHelper('question');
                 $question = new ConfirmationQuestion(sprintf(
                     '<question>%s "%s" already exists. Overwrite? [y/N]:</question> ',
